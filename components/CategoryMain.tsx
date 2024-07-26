@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { motion } from "framer-motion";
 
 const CategoryMain = () => {
   const [categories, setCategories] = useState([]);
@@ -24,11 +25,31 @@ const CategoryMain = () => {
       <div className="flex-col m-4">
         <div className="my-8">
           <h1 className="font-bold">Our Categories</h1>
-          <div className="mt-2">
+        </div>
+        <div className="mt-2 flex">
+          <motion.div
+            initial={{ x: -1000, opacity: 0 }}
+            animate={{ x: -2, opacity: 1 }}
+            transition={{ ease: "easeInOut", duration: 0.5 }}
+          >
             <Swiper
               spaceBetween={20}
               slidesPerView={4}
               pagination={{ clickable: true }}
+              breakpoints={{
+                640: {
+                  slidesPerView: 2,
+                  spaceBetween: 20,
+                },
+                768: {
+                  slidesPerView: 3,
+                  spaceBetween: 30,
+                },
+                1024: {
+                  slidesPerView: 5,
+                  spaceBetween: 40,
+                },
+              }}
             >
               {categories.map((category: any, index: number) => (
                 <SwiperSlide key={index}>
@@ -46,7 +67,7 @@ const CategoryMain = () => {
                 </SwiperSlide>
               ))}
             </Swiper>
-          </div>
+          </motion.div>
         </div>
       </div>
     </>

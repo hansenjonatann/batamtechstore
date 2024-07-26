@@ -6,7 +6,7 @@ import ProductMain from "@/components/ProductMain";
 
 const Home: React.FC = () => {
   return (
-    <div className="min-h-screen bg-blue-600 bg-gradient-to-r from-blue-600 to-indigo-600">
+    <div className="min-h-screen bg-gradient-to-r from-blue-600 to-indigo-600">
       <Navbar />
       <main className="py-10">
         <div className="max-w-7xl    sm:px-6 lg:px-8">

@@ -4,6 +4,7 @@ import Link from "next/link";
 import ProductCard from "./ProductCard";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { motion } from "framer-motion";
 
 const ProductMain = () => {
   const [products, setProducts] = useState([]);
@@ -28,7 +29,13 @@ const ProductMain = () => {
         </div>
 
         <div className="grid gap-x-4 grid-cols-1 mt-8 md:grid-cols-2 lg:grid-cols-4">
-          <ProductCard products={products} />
+          <motion.div
+            initial={{ x: 1000, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ ease: "easeInOut", duration: 0.75 }}
+          >
+            <ProductCard products={products} />
+          </motion.div>
         </div>
       </div>
     </>
