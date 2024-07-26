@@ -13,7 +13,7 @@ cloudinary.config({
 
 export const GET = async (req: NextRequest) => {
   const page = Number(req.nextUrl.searchParams.get("page")) || 1;
-  const limit = 10;
+  const limit = 4;
   try {
     const offset = (page - 1) * limit;
     const totalProduct = await db.product.count();
