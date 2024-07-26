@@ -1,8 +1,9 @@
 "use server";
 
 import { NextResponse, NextRequest } from "next/server";
-import { PrismaClient, Product } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { v2 as cloudinary } from "cloudinary";
+
 const db = new PrismaClient();
 
 cloudinary.config({
@@ -17,21 +18,20 @@ export const GET = async (req: NextRequest) => {
   try {
     const offset = (page - 1) * limit;
     const totalProduct = await db.product.count();
-    const product = await db.product.findMany({
+    const products = await db.product.findMany({
       include: {
         category: true,
       },
-
       skip: offset,
       take: limit,
     });
 
-    if (product) {
+    if (products.length) {
       return NextResponse.json({
         status: true,
         statusCode: 200,
-        message: "List of Paginate Product",
-        data: product,
+        message: "List of Paginated Products",
+        data: products,
         paginate: {
           currentPage: page,
           total: totalProduct,
@@ -40,33 +40,62 @@ export const GET = async (req: NextRequest) => {
       });
     }
 
-    if (!product) {
-      return NextResponse.json({
-        status: false,
-        statusCode: 400,
-        message: "Failed to fetch List of Paginate Product",
-      });
-    }
+    return NextResponse.json({
+      status: false,
+      statusCode: 400,
+      message: "Failed to fetch List of Paginated Products",
+    });
   } catch (error) {
     return NextResponse.json({
       status: false,
       statusCode: 500,
       message: "Internal Server error",
-      error: error,
+      error: (error as Error).message,
     });
   }
 };
 
 export const POST = async (req: NextRequest) => {
   try {
-    const body: Product = await req.json();
+    const form = await req.formData();
+    const name = form.get("name") as string;
+    const description = form.get("description") as string;
+    const price = Number(form.get("price"));
+    const categoryId = form.get("categoryId") as string;
+    const imageFile = form.get("image") as File;
+
+    const arrayBuffer = await imageFile.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    const uploadToCloudinary = () => {
+      return new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          {
+            folder: "products",
+            public_id: imageFile.name,
+            resource_type: "image",
+          },
+          (error, result) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+        uploadStream.end(buffer);
+      });
+    };
+
+    const response: any = await uploadToCloudinary();
+
     const product = await db.product.create({
       data: {
-        name: body.name,
-        price: body.price,
-        description: body.description,
-        categoryId: body.categoryId,
-        image: body.image,
+        name,
+        description,
+        price,
+        categoryId,
+        imageUrl: response.secure_url,
       },
     });
 
@@ -74,24 +103,22 @@ export const POST = async (req: NextRequest) => {
       return NextResponse.json({
         status: true,
         statusCode: 201,
-        message: "Product create successfully",
+        message: "Product created successfully",
         data: product,
       });
     }
 
-    if (!product) {
-      return NextResponse.json({
-        status: false,
-        statusCode: 400,
-        message: "Something went wrong",
-      });
-    }
+    return NextResponse.json({
+      status: false,
+      statusCode: 400,
+      message: "Something went wrong",
+    });
   } catch (error) {
     return NextResponse.json({
       status: false,
       statusCode: 500,
       message: "Internal Server Error",
-      error: error,
+      error: (error as Error).message,
     });
   }
 };

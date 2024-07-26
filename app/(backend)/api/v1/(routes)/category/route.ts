@@ -1,16 +1,18 @@
 "use server";
 
 import { NextResponse, NextRequest } from "next/server";
-import { Category, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
+
 const db = new PrismaClient();
 
+// Handling GET request for categories
 export const GET = async (req: NextRequest) => {
   const page = Number(req.nextUrl.searchParams.get("page")) || 1;
   const limit = 10;
   try {
     const offset = (page - 1) * limit;
     const totalCategory = await db.category.count();
-    const category = await db.category.findMany({
+    const categories = await db.category.findMany({
       include: {
         products: true,
       },
@@ -18,12 +20,12 @@ export const GET = async (req: NextRequest) => {
       take: limit,
     });
 
-    if (category) {
+    if (categories.length) {
       return NextResponse.json({
         status: true,
         statusCode: 200,
-        message: "List of Category",
-        data: category,
+        message: "List of Categories",
+        data: categories,
         pagination: {
           limit: limit,
           total: totalCategory,
@@ -32,27 +34,26 @@ export const GET = async (req: NextRequest) => {
       });
     }
 
-    if (!category) {
-      return NextResponse.json({
-        status: false,
-        statusCode: 400,
-        message: "Failed to fetch category data",
-        data: null,
-      });
-    }
-  } catch (e) {
+    return NextResponse.json({
+      status: false,
+      statusCode: 400,
+      message: "Failed to fetch category data",
+      data: null,
+    });
+  } catch (error) {
     return NextResponse.json({
       status: false,
       statusCode: 500,
       message: "Internal Server Error",
-      error: e,
+      error: (error as Error).message,
     });
   }
 };
 
+// Handling POST request for categories
 export const POST = async (req: NextRequest) => {
   try {
-    const body: Category = await req.json();
+    const body = await req.json();
     const category = await db.category.create({
       data: {
         name: body.name,
@@ -69,19 +70,59 @@ export const POST = async (req: NextRequest) => {
       });
     }
 
-    if (!category) {
-      return NextResponse.json({
-        status: false,
-        statusCode: 400,
-        message: "Something went wrong",
-      });
-    }
-  } catch (e) {
+    return NextResponse.json({
+      status: false,
+      statusCode: 400,
+      message: "Something went wrong",
+    });
+  } catch (error) {
     return NextResponse.json({
       status: false,
       statusCode: 500,
       message: "Internal Server Error",
-      error: e,
+      error: (error as Error).message,
+    });
+  }
+};
+
+// Handling PATCH request for categories
+export const PATCH = async (
+  req: NextRequest,
+  { params }: { params: { categoryId: string } }
+) => {
+  try {
+    const body = await req.json();
+    const categoryId = params.categoryId;
+    const category = await db.category.update({
+      where: {
+        id: categoryId,
+      },
+      data: {
+        name: body.name,
+        description: body.description,
+      },
+    });
+
+    if (category) {
+      return NextResponse.json({
+        status: true,
+        statusCode: 200,
+        message: "Category updated successfully",
+        data: category,
+      });
+    }
+
+    return NextResponse.json({
+      status: false,
+      statusCode: 400,
+      message: "Something went wrong",
+    });
+  } catch (error) {
+    return NextResponse.json({
+      status: false,
+      statusCode: 500,
+      message: "Internal Server Error",
+      error: (error as Error).message,
     });
   }
 };
