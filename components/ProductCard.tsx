@@ -1,53 +1,49 @@
-"use client";
+import { ShoppingCart } from 'lucide-react';
+import Link from 'next/link';
 
-import { ShoppingCart } from "lucide-react";
-import Link from "next/link";
-
-interface ProductCardProps {
-  products: any;
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
 }
 
-const ProductCard = ({ products }: ProductCardProps) => {
+interface ProductCardProps {
+  products: Product[];
+}
+
+const ProductCard: React.FC<ProductCardProps> = ({ products }) => {
+  if (!Array.isArray(products)) {
+    console.error('Products should be an array.');
+    return null;
+  }
+
   return (
     <>
-      {products.map((product: any, index: any) => (
+      {products.map((product) => (
         <div
-          key={index}
-          className="mt-8 bg-white pb-2 md:pb-2 mx-4 md:mx-0 transition-all ease-in-out duration-200 aspect-square rounded-lg shadow-md hover:shadow-2xl hover:shadow-purple-600 hover:ring-purple-600 "
+          key={product.id}
+          className="mt-8 bg-white pb-2 mx-4 md:mx-0 transition-all ease-in-out duration-200 aspect-square rounded-lg shadow-md hover:shadow-2xl hover:shadow-purple-600 hover:ring-purple-600 "
         >
           <div className="flex-col">
             <div className="w-full bg-black h-32 hover:opacity-45 transition-all ease-in-out duration-200 hover:rounded-lg">
-              <h1>Gambar</h1>
+              <img src={product.image} alt={product.name} className="w-full h-full object-contain object-center" />
             </div>
-            <div className="flex-col m-2">
-              <div className="flex items-center justify-between">
-                <h1 className="text-black md:text-md text-sm">
-                  {product.name}
-                </h1>
-                <Link
-                  href={`/category/${product.category.id}`}
-                  className=" text-blue-800 uppercase font-bold text-[12px] md:text-md md:ms-4  "
-                >
-                  {product.category.name}
-                </Link>
-              </div>
-              <p className="text-slate-600 mt-2 truncate text-xs">
-                {product.description}
+            <div className="mt-2 px-4">
+              <h1 className="text-xs">{product.name}</h1>
+              <p className="font-bold text-sm md:text-base text-blue-800">
+                {new Intl.NumberFormat('id-ID', {
+                  style: 'currency',
+                  currency: 'IDR',
+                }).format(product.price)}
               </p>
-              <div className="flex justify-between  mt-8 md:mt-4  items-center">
-                <button className="px-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:bg-gradient-to-l hover:from-blue-600 hover:to-purple-600  text-sm font-bold py-2 rounded-md">
-                  <ShoppingCart />
-                </button>
-
-                <div className="">
-                  <h1 className="text-black">
-                    Rp{" "}
-                    <span className="font-bold text-blue-800">
-                      {product.price.toLocaleString("ID")}
-                    </span>
-                  </h1>
-                </div>
-              </div>
+              <Link
+                href={`/products/${product.id}`}
+                className="px-2 py-2 w-full bg-purple-500 flex justify-center text-white items-center mt-4 rounded-lg hover:bg-purple-700 transition-all ease-in-out duration-200 text-xs md:text-base"
+              >
+                <ShoppingCart size={18} className="mr-1" />
+                Details
+              </Link>
             </div>
           </div>
         </div>

@@ -1,5 +1,6 @@
-import { NextResponse, NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+
 const db = new PrismaClient();
 
 export const dynamic = "force-dynamic";
@@ -12,28 +13,23 @@ export const GET = async () => {
       },
     });
 
-    if (products) {
-      return NextResponse.json({
-        status: true,
-        statusCode: 200,
-        message: "List of All Products",
-        data: products,
-      });
+    return NextResponse.json({
+      status: true,
+      statusCode: 200,
+      message: "List of All Products",
+      data: products,
+    });
+  } catch (error: unknown) {
+    let errorMessage = "Internal Server Error";
+    if (error instanceof Error) {
+      errorMessage = error.message;
     }
-
-    if (!products) {
-      return NextResponse.json({
-        status: false,
-        statusCode: 400,
-        message: "Failed to fetch data",
-      });
-    }
-  } catch (error) {
+    console.error("Error fetching products:", error);
     return NextResponse.json({
       status: false,
       statusCode: 500,
-      message: "Internal Server error",
-      error: error,
+      message: errorMessage,
+      error: errorMessage,
     });
   }
 };

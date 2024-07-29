@@ -10,16 +10,18 @@ const ProductMain = () => {
 
   const fetchProducts = async () => {
     try {
-      const res = await axios.get("/api/v1/product");
+      const res = await axios.get("/api/v1/products");
       if (res.status === 200) {
         setProducts(res.data.data);
       } else {
-        console.error(`Error: ${res.status} - ${res.statusText}`);
         setError("Failed to fetch products.");
       }
     } catch (err) {
-      console.error("Error fetching products:", err);
-      setError("Failed to fetch products.");
+      if (axios.isAxiosError(err)) {
+        setError(err.response?.data?.message || "Failed to fetch products.");
+      } else {
+        setError("Failed to fetch products.");
+      }
     }
   };
 
@@ -28,10 +30,10 @@ const ProductMain = () => {
   }, []);
 
   return (
-    <div className="flex-col m-4">
-      <div className="flex items-center justify-between">
-        <h1 className="font-bold text-xs md:text-xl">Our Products</h1>
-        <Link href={"/products"} className="text-xs md:text-xl">
+    <div className="flex flex-col m-4">
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="font-bold text-lg md:text-xl">Our Products</h1>
+        <Link href="/products" className="text-xs md:text-lg text-white hover:underline">
           See other Products...
         </Link>
       </div>
@@ -39,7 +41,7 @@ const ProductMain = () => {
       {error ? (
         <div className="text-red-500">{error}</div>
       ) : (
-        <div className="grid gap-x-4 grid-cols-1 mt-8 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <ProductCard products={products} />
         </div>
       )}

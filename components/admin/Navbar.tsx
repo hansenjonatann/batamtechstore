@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { ShoppingCart } from "lucide-react";
 
-const Navbar: React.FC = () => {
+const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const navbarList = [
@@ -35,8 +35,8 @@ const Navbar: React.FC = () => {
         <div className="flex justify-between h-16">
           <div className="flex items-center"></div>
           <div className="hidden sm:flex sm:items-center sm:space-x-8">
-            {navbarList.map((nav: any, index: number) => (
-              <Link key={index} href={nav.path} legacyBehavior>
+            {navbarList.map((nav) => (
+              <Link key={nav.id} href={nav.path} legacyBehavior>
                 <a className="text-white hover:bg-blue-700 hover:bg-opacity-75 px-3 py-2 rounded-md text-sm font-medium">
                   {nav.label}
                 </a>
@@ -90,13 +90,10 @@ const Navbar: React.FC = () => {
         </div>
       </div>
 
-      <div
-        className={`${isOpen ? "block" : "hidden"} sm:hidden`}
-        id="mobile-menu"
-      >
+      <div className={`${isOpen ? "block" : "hidden"} sm:hidden`} id="mobile-menu">
         <div className="px-2 pt-2 pb-3 space-y-1">
-          {navbarList.map((nav: any, index: number) => (
-            <Link key={index} href={nav.path} legacyBehavior>
+          {navbarList.map((nav) => (
+            <Link key={nav.id} href={nav.path} legacyBehavior>
               <a className="text-white hover:bg-blue-700 hover:bg-opacity-75 block px-3 py-2 rounded-md text-base font-medium">
                 {nav.label}
               </a>

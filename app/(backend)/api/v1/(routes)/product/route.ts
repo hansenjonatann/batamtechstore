@@ -95,7 +95,7 @@ export const POST = async (req: NextRequest) => {
         description,
         price,
         categoryId,
-        imageUrl: response.secure_url,
+        image: response.secure_url,
       },
     });
 

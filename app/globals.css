@@ -30,4 +30,56 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+
+  .btn {
+    @apply px-4 py-2 rounded-lg transition-colors duration-300 ease-in-out;
+  }
+
+  .btn-primary {
+    @apply bg-blue-600 text-white hover:bg-blue-700;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-300 text-black hover:bg-gray-400;
+  }
+
+  .modal-bg {
+    @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center;
+  }
+
+  .modal-content {
+    @apply bg-white p-6 rounded-lg shadow-lg w-full max-w-md;
+  }
+
+  .table-container {
+    @apply overflow-x-auto bg-white shadow-md rounded-lg;
+  }
+
+  .table-header {
+    @apply bg-gray-200;
+  }
+
+  .table-row {
+    @apply border-b;
+  }
+
+  .table-cell {
+    @apply border px-4 py-2;
+  }
+
+  .table-actions {
+    @apply border px-4 py-2 flex justify-around;
+  }
+
+  .form-group {
+    @apply mb-4;
+  }
+
+  .form-label {
+    @apply block mb-2;
+  }
+
+  .form-input {
+    @apply w-full px-4 py-2 border rounded-lg;
+  }
 }

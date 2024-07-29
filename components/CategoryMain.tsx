@@ -9,21 +9,23 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 
 const CategoryMain = () => {
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const fetchCategories = async () => {
     try {
       const res = await axios.get("/api/v1/categories");
-      if (res.status === 200) {
+      if (res.status === 200 && res.data && res.data.data) {
         setCategories(res.data.data);
       } else {
-        console.error(`Error: ${res.status} - ${res.statusText}`);
         setError("Failed to fetch categories.");
       }
     } catch (err) {
-      console.error("Error fetching categories:", err);
-      setError("Failed to fetch categories.");
+      if (axios.isAxiosError(err)) {
+        setError(err.response?.data?.message || "Failed to fetch categories.");
+      } else {
+        setError("Failed to fetch categories.");
+      }
     }
   };
 
@@ -46,20 +48,24 @@ const CategoryMain = () => {
               navigation
               pagination={{ clickable: true }}
             >
-              {categories.map((category: any, index: number) => (
-                <SwiperSlide key={index}>
-                  <Link href={`/category/${category.slug}`}>
-                    <div
-                      className="w-48 bg-white 
-                      transition-all ease-in-out duration-300
-                      hover:bg-gradient-to-l from-purple-600 to-blue-600 hover:text-white
-                      justify-center items-center flex rounded-md text-blue-800 h-12"
-                    >
-                      <h1 className="font-bold">{category.name}</h1>
-                    </div>
-                  </Link>
-                </SwiperSlide>
-              ))}
+              {categories.length > 0 ? (
+                categories.map((category: any, index: number) => (
+                  <SwiperSlide key={index}>
+                    <Link href={`/category/${category.slug}`}>
+                      <div
+                        className="w-48 bg-white 
+                        transition-all ease-in-out duration-300
+                        hover:bg-gradient-to-l from-purple-600 to-blue-600 hover:text-white
+                        justify-center items-center flex rounded-md text-blue-800 h-12"
+                      >
+                        <h1 className="font-bold">{category.name}</h1>
+                      </div>
+                    </Link>
+                  </SwiperSlide>
+                ))
+              ) : (
+                <div>No categories available.</div>
+              )}
             </Swiper>
           </div>
         )}
