@@ -11,7 +11,7 @@ const Sidebar: React.FC = () => {
         <h1 className="text-2xl font-bold">Batam Tech Store</h1>
       </div>
       <nav className="mt-10 flex flex-col">
-        <Link href="/admin/dashboard" className="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-purple-800 hover:bg-opacity-75">
+        <Link href="/admin" className="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-purple-800 hover:bg-opacity-75">
           <FaTachometerAlt className="mr-3" /> Dashboard
         </Link>
         <Link href="/admin/products" className="flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-purple-800 hover:bg-opacity-75">

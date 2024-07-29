@@ -51,7 +51,7 @@ const CategoryMain = () => {
               {categories.length > 0 ? (
                 categories.map((category: any, index: number) => (
                   <SwiperSlide key={index}>
-                    <Link href={`/category/${category.slug}`}>
+                    <Link href={`/category/${category.id}`}>
                       <div
                         className="w-48 bg-white 
                         transition-all ease-in-out duration-300
