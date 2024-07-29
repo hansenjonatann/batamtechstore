@@ -18,9 +18,9 @@ const ProductTable = ({ products, fetchProducts, setSelectedProduct, openModal }
 
   return (
     <div className="table-container">
-      <table className="min-w-full bg-white">
+      <table className=" bg-gray-800">
         <thead className="table-header">
-          <tr>
+          <tr className='bg-purple-600'>
             <th className="table-cell">Name</th>
             <th className="table-cell">Description</th>
             <th className="table-cell">Price</th>
@@ -32,7 +32,7 @@ const ProductTable = ({ products, fetchProducts, setSelectedProduct, openModal }
             <tr key={product.id} className="table-row">
               <td className="table-cell">{product.name}</td>
               <td className="table-cell">{product.description}</td>
-              <td className="table-cell">{product.price}</td>
+              <td className="table-cell">{product.price.toLocaleString('ID')}</td>
               <td className="table-actions">
                 <button
                   onClick={() => handleEdit(product)}

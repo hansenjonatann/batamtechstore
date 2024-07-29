@@ -30,10 +30,12 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="bg-blue-600 shadow-lg">
+    <nav className="bg-gradient-to-l from-blue-700 to-purple-700 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          <div className="flex items-center"></div>
+          <div className="flex items-center">
+            <h1 className="font-bold text-xl hidden md:flex mx-4">Batam Tech Store</h1>
+          </div>
           <div className="hidden sm:flex sm:items-center sm:space-x-8">
             {navbarList.map((nav) => (
               <Link key={nav.id} href={nav.path} legacyBehavior>
